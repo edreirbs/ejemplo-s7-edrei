@@ -48,9 +48,13 @@ esta página**.
 - Antes de un cambio grande, dame el plan por escrito y espera mi visto bueno.
 - Un cambio a la vez. Enséñame qué cambió antes de escribirlo.
 - Trabaja siempre en una rama, nunca directo sobre `main`.
-- Cualquier cambio que se haga en cualquier rama se pide en pull request, se
-  fusiona a `main` y se despliega automáticamente en producción de Netlify y
-  de Supabase.
+- Cualquier cambio que se haga en cualquier rama se pide en pull request y se
+  fusiona a `main`.
+- **Fusionar no publica.** El sitio de Netlify todavía no está ligado a este
+  repositorio, así que no hay vista previa por rama: fusionar a `main` deja el
+  cambio guardado pero no lo pone en línea. Publicar es un paso aparte, que se
+  pide explícitamente después de fusionar. Mientras siga así, conviene juntar
+  cambios y publicar poco.
 - **Si tienes acceso a mi base de datos, enséñame el SQL antes de correrlo y espera mi
   respuesta.** Crear o borrar tablas, agregar o quitar columnas y cambiar permisos no se
   deshacen con una rama: en cuanto corren, ya está.
@@ -67,9 +71,10 @@ esta página**.
 ## 5. Mi regla de verificación
 
 Cierro lo que entrego con: **haz pull y despliegue**. Antes de decir eso tiene
-que ser cierto que el cambio ya está en la rama, que la vista previa de Netlify
-lo muestra bien, y que nada de lo que se ve en pantalla está inventado: todo
-sale de las tablas de la sección 2 o del formulario.
+que ser cierto que el cambio ya está en la rama, que se abrió el `index.html` de
+la rama en el navegador y se vio bien (no hay vista previa por rama, ver sección
+3), y que nada de lo que se ve en pantalla está inventado: todo sale de las
+tablas de la sección 2 o del formulario.
 
 ## 6. Cómo vuelvo a abrir esto
 
