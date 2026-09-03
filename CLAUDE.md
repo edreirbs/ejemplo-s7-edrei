@@ -8,8 +8,8 @@ primer minuto.
 
 ## 1. Qué es este proyecto y quién lo usa
 
-*(Lo escribes tú en la sesión: dos líneas. Qué es la página, para quién es y cada
-cuándo se usa.)*
+Es un buzón de sugerencias para la cena de fin de año de mi equipo. Lo uso yo
+y todo mi equipo para juntar ideas de lugar, comida y actividades.
 
 ## 2. De dónde sale cada cifra
 
@@ -24,7 +24,9 @@ sale de esa tabla o de lo que la persona escriba en el formulario.
 - Antes de un cambio grande, dame el plan por escrito y espera mi visto bueno.
 - Un cambio a la vez. Enséñame qué cambió antes de escribirlo.
 - Trabaja siempre en una rama, nunca directo sobre `main`.
-- No publiques a producción sin que yo lo pida: fusionar es una decisión mía.
+- Cualquier cambio que se haga en cualquier rama se pide en pull request, se
+  fusiona a `main` y se despliega automáticamente en producción de Netlify y
+  de Supabase.
 - **Si tienes acceso a mi base de datos, enséñame el SQL antes de correrlo y espera mi
   respuesta.** Crear o borrar tablas, agregar o quitar columnas y cambiar permisos no se
   deshacen con una rama: en cuanto corren, ya está.
@@ -40,8 +42,10 @@ sale de esa tabla o de lo que la persona escriba en el formulario.
 
 ## 5. Mi regla de verificación
 
-*(La escribes tú en la sesión: con qué frase cierras lo que entregas y qué tiene
-que ser cierto para que puedas publicarlo.)*
+Cierro lo que entrego con: **haz pull y despliegue**. Antes de decir eso tiene
+que ser cierto que el cambio ya está en la rama, que la vista previa de Netlify
+lo muestra bien, y que nada de lo que se ve en pantalla está inventado: todo
+sale de la tabla `registros` o del formulario.
 
 ## 6. Cómo vuelvo a abrir esto
 
@@ -53,3 +57,8 @@ que ser cierto para que puedas publicarlo.)*
 > **Si la página deja de mostrar datos después de una semana sin usarla**, casi
 > siempre es que el proyecto gratuito de Supabase se pausó. Se despierta con el
 > botón **Resume project**.
+
+## 7. Sistema de diseño
+
+- **Colores:** rojo, negro y blanco.
+- **Tipografía:** Roboto.
