@@ -6,10 +6,8 @@ Este archivo lo lee Claude cada vez que trabaja en esta carpeta, sin que se lo p
 
 ## 1. Qué es este proyecto y quién lo usa
 
-Es un buzón público para juntar propuestas de lugar para la cena de fin de año:
-quien entra puede proponer un lugar y votar las propuestas de los demás.
-
-Lo usa el equipo, una vez al año, en las semanas previas a la cena.
+Es un buzón de sugerencias para la cena de fin de año de mi equipo. Lo uso yo
+y todo mi equipo para juntar ideas de lugar, comida y actividades.
 
 ## 2. De dónde sale cada cifra
 
@@ -35,7 +33,9 @@ esta página**.
 - Antes de un cambio grande, dame el plan por escrito y espera mi visto bueno.
 - Un cambio a la vez. Enséñame qué cambió antes de escribirlo.
 - Trabaja siempre en una rama, nunca directo sobre `main`.
-- No publiques a producción sin que yo lo pida: fusionar es una decisión mía.
+- Cualquier cambio que se haga en cualquier rama se pide en pull request, se
+  fusiona a `main` y se despliega automáticamente en producción de Netlify y
+  de Supabase.
 - **Si tienes acceso a mi base de datos, enséñame el SQL antes de correrlo y espera mi
   respuesta.** Crear o borrar tablas, agregar o quitar columnas y cambiar permisos no se
   deshacen con una rama: en cuanto corren, ya está.
@@ -51,8 +51,10 @@ esta página**.
 
 ## 5. Mi regla de verificación
 
-Cierra siempre diciendo qué probaste y qué no pudiste probar.
-Nunca publiques a producción sin que yo lo pida.
+Cierro lo que entrego con: **haz pull y despliegue**. Antes de decir eso tiene
+que ser cierto que el cambio ya está en la rama, que la vista previa de Netlify
+lo muestra bien, y que nada de lo que se ve en pantalla está inventado: todo
+sale de las tablas de la sección 2 o del formulario.
 
 ## 6. Cómo vuelvo a abrir esto
 
@@ -65,3 +67,8 @@ Nunca publiques a producción sin que yo lo pida.
 > **Si la página deja de mostrar datos después de una semana sin usarla**, casi
 > siempre es que el proyecto gratuito de Supabase se pausó. Se despierta con el
 > botón **Resume project**.
+
+## 7. Sistema de diseño
+
+- **Colores:** rojo, negro y blanco.
+- **Tipografía:** Roboto.
