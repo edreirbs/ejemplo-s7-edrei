@@ -1,8 +1,6 @@
 # CLAUDE.md
 
 Este archivo lo lee Claude cada vez que trabaja en esta carpeta, sin que se lo pidas.
-Lo vas a llenar en la sesión. Por ahora trae solo las reglas que aplican desde el
-primer minuto.
 
 ---
 
@@ -13,11 +11,22 @@ y todo mi equipo para juntar ideas de lugar, comida y actividades.
 
 ## 2. De dónde sale cada cifra
 
-Los datos de esta página viven en una tabla de Supabase llamada `registros`.
-Ninguna cifra ni ningún texto que se muestre se escribe a mano en el HTML: todo
-sale de esa tabla o de lo que la persona escriba en el formulario.
+Los datos de esta página viven en el proyecto de Supabase **`lexi`**, en dos
+tablas. Ninguna cifra ni ningún texto que se muestre se escribe a mano en el
+HTML: todo sale de esas tablas o de lo que la persona escriba en el formulario.
 
-*(En la sesión le agregas las columnas que acabes usando.)*
+| Tabla | Columnas | Qué guarda |
+|---|---|---|
+| `propuestas_cena` | `id`, `lugar`, `propuesto_por`, `justificacion`, `creado_en` | Una fila por propuesta enviada |
+| `propuestas_cena_votos` | `propuesta_id`, `votante_id`, `creado_en` | Un voto por persona y propuesta |
+
+El número de votos que ve la gente no es una columna: se cuenta sobre las filas
+de `propuestas_cena_votos`. El `votante_id` es un identificador aleatorio que se
+guarda en el navegador de cada quien; sirve para no votar dos veces la misma
+propuesta, no es una cuenta de usuario.
+
+La tabla `registros` existe en ese mismo proyecto de Supabase pero **no la usa
+esta página**.
 
 ## 3. Cómo quiero que trabajes aquí
 
@@ -45,14 +54,15 @@ sale de esa tabla o de lo que la persona escriba en el formulario.
 Cierro lo que entrego con: **haz pull y despliegue**. Antes de decir eso tiene
 que ser cierto que el cambio ya está en la rama, que la vista previa de Netlify
 lo muestra bien, y que nada de lo que se ve en pantalla está inventado: todo
-sale de la tabla `registros` o del formulario.
+sale de las tablas de la sección 2 o del formulario.
 
 ## 6. Cómo vuelvo a abrir esto
 
-- El proyecto vive en este repositorio de GitHub.
+- El proyecto vive en el repositorio de GitHub `edreirbs/ejemplo-s7-edrei`.
 - Se abre pidiéndole a Claude una sesión sobre este repo; no hace falta descargarlo.
-- La página publicada está en la liga que da Netlify.
-- La base de datos está en supabase.com, en el proyecto de esta cuenta.
+- La página publicada está en <https://ejemplo-s7-edrei.netlify.app>.
+  El tablero de Netlify está en <https://app.netlify.com/projects/ejemplo-s7-edrei>.
+- La base de datos está en supabase.com, en el proyecto **`lexi`** de esta cuenta.
 
 > **Si la página deja de mostrar datos después de una semana sin usarla**, casi
 > siempre es que el proyecto gratuito de Supabase se pausó. Se despierta con el
