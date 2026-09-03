@@ -35,9 +35,10 @@ Compara lo que cambió contra lo que se pidió cambiar. Mira el diff (`git diff`
 - restos de pruebas, `console.log`, comentarios de trabajo a medias
 - archivos nuevos que no vienen al caso
 - datos escritos a mano en el HTML: en este proyecto todo lo que se ve en
-  pantalla tiene que salir de la tabla `registros` de Supabase o del
-  formulario. Un nombre, una cifra o un ejemplo puesto directo en el código es
-  un hallazgo, siempre.
+  pantalla tiene que salir de las tablas `propuestas_cena` y
+  `propuestas_cena_votos` de Supabase o del formulario. La tabla `registros`
+  existe en ese proyecto pero esta página no la usa. Un nombre, una cifra o un
+  ejemplo puesto directo en el código es un hallazgo, siempre.
 
 Si no sabes qué se pidió cambiar, dilo y revisa el diff completo señalando lo
 que se ve fuera de lugar.
