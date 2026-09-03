@@ -4,80 +4,99 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Buzón de ideas — Cena de fin de año</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root { color-scheme: light dark; }
+  /* Sistema de diseño (CLAUDE.md §7): rojo, negro y blanco. Tipografía Roboto. */
+  :root {
+    color-scheme: light dark;
+    --rojo: #d62828;
+    --rojo-oscuro: #a51f1f;
+    --negro: #111111;
+    --blanco: #ffffff;
+    --fondo: #f2f2f2;
+    --borde: #d9d9d9;
+    --tenue: #5c5c5c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --negro: #f2f2f2;
+      --blanco: #1a1a1a;
+      --fondo: #000000;
+      --borde: #3a3a3a;
+      --tenue: #a8a8a8;
+    }
+  }
   * { box-sizing: border-box; }
   body {
     margin: 0; min-height: 100vh;
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    background: #f4f6f8; color: #1a2027;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    background: var(--fondo); color: var(--negro);
     padding: 24px;
     display: flex; justify-content: center;
   }
-  @media (prefers-color-scheme: dark) {
-    body { background: #121820; color: #e8eef5; }
-    .tarjeta, .propuesta { background: #1b232e !important; border-color: #2b3644 !important; }
-    .pestanas { background: #1b232e !important; border-color: #2b3644 !important; }
-    input, textarea { background: #121820 !important; border-color: #364355 !important; color: #e8eef5 !important; }
-    .vacio { color: #8a97a6 !important; }
-  }
   .contenedor { width: 100%; max-width: 560px; }
   .tarjeta {
-    background: #fff; border: 1px solid #dde3ea; border-radius: 14px;
+    background: var(--blanco); border: 1px solid var(--borde); border-radius: 14px;
     padding: 28px 24px; margin-bottom: 18px;
-    box-shadow: 0 10px 30px -18px rgba(0,0,0,.3);
+    border-top: 4px solid var(--rojo);
+    box-shadow: 0 10px 30px -18px rgba(0,0,0,.35);
   }
-  h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.25; }
-  .explicacion { margin: 0; line-height: 1.55; opacity: .85; }
+  h1 { font-size: 24px; font-weight: 700; margin: 0 0 10px; line-height: 1.25; }
+  .explicacion { margin: 0; line-height: 1.55; color: var(--tenue); }
 
   .pestanas {
-    display: flex; gap: 4px; background: #fff; border: 1px solid #dde3ea;
+    display: flex; gap: 4px; background: var(--blanco); border: 1px solid var(--borde);
     border-radius: 12px; padding: 4px; margin-bottom: 18px;
   }
   .pestana {
     flex: 1; padding: 10px; text-align: center; border: 0; border-radius: 9px;
-    background: transparent; font-size: 15px; cursor: pointer; color: inherit;
+    background: transparent; font-family: inherit; font-size: 15px; font-weight: 500;
+    cursor: pointer; color: var(--negro);
   }
-  .pestana.activa { background: #2b6ef2; color: #fff; }
+  .pestana.activa { background: var(--rojo); color: #ffffff; }
 
   .vista { display: none; }
   .vista.activa { display: block; }
 
   .propuesta {
-    background: #fff; border: 1px solid #dde3ea; border-radius: 14px;
+    background: var(--blanco); border: 1px solid var(--borde); border-radius: 14px;
     padding: 18px 20px; margin-bottom: 12px;
   }
-  .propuesta .lugar { font-size: 17px; font-weight: 600; margin: 0 0 4px; }
-  .propuesta .quien { font-size: 13px; opacity: .7; margin: 0 0 8px; }
+  .propuesta .lugar { font-size: 17px; font-weight: 700; margin: 0 0 4px; }
+  .propuesta .quien { font-size: 13px; color: var(--tenue); margin: 0 0 8px; }
   .propuesta .justificacion { margin: 0 0 14px; line-height: 1.5; }
   .fila-voto { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .votos { font-size: 14px; opacity: .8; }
+  .votos { font-size: 14px; font-weight: 500; color: var(--tenue); }
   button.votar {
-    border: 1px solid #2b6ef2; background: #eaf1ff; color: #2b6ef2;
-    border-radius: 9px; padding: 8px 16px; font-size: 14px; cursor: pointer;
+    border: 1px solid var(--rojo); background: transparent; color: var(--rojo);
+    border-radius: 9px; padding: 8px 16px; font-family: inherit; font-size: 14px;
+    font-weight: 500; cursor: pointer;
   }
-  button.votar:disabled { opacity: .55; cursor: default; }
-  @media (prefers-color-scheme: dark) {
-    button.votar { background: #17233a; }
-  }
+  button.votar:hover:not(:disabled) { background: var(--rojo); color: #ffffff; }
+  button.votar:disabled { border-color: var(--borde); color: var(--tenue); cursor: default; }
 
-  .vacio { text-align: center; opacity: .7; padding: 20px 0; }
+  .vacio { text-align: center; color: var(--tenue); padding: 20px 0; }
 
   form { display: flex; flex-direction: column; gap: 14px; }
-  label { font-size: 14px; font-weight: 600; display: block; margin-bottom: 6px; }
+  label { font-size: 14px; font-weight: 500; display: block; margin-bottom: 6px; }
   input, textarea {
-    width: 100%; border: 1px solid #ccd4dc; border-radius: 9px;
+    width: 100%; border: 1px solid var(--borde); border-radius: 9px;
     padding: 10px 12px; font-size: 15px; font-family: inherit;
+    background: var(--blanco); color: var(--negro);
   }
+  input:focus, textarea:focus { outline: 2px solid var(--rojo); outline-offset: 1px; }
   textarea { resize: vertical; min-height: 70px; }
   button.enviar {
-    border: 0; background: #2b6ef2; color: #fff; border-radius: 9px;
-    padding: 12px; font-size: 15px; cursor: pointer;
+    border: 0; background: var(--rojo); color: #ffffff; border-radius: 9px;
+    padding: 12px; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer;
   }
-  button.enviar:disabled { opacity: .6; cursor: default; }
-  .aviso { font-size: 13px; margin: 0; }
-  .aviso.error { color: #c0392b; }
-  .aviso.ok { color: #1e8e3e; }
+  button.enviar:hover:not(:disabled) { background: var(--rojo-oscuro); }
+  button.enviar:disabled { background: var(--tenue); cursor: default; }
+  .aviso { font-size: 13px; margin: 0; font-weight: 500; }
+  .aviso.error { color: var(--rojo); }
+  .aviso.ok { color: var(--negro); }
 </style>
 </head>
 <body>
