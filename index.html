@@ -6,6 +6,7 @@
 <title>Buzón de ideas — Cena de fin de año</title>
 <style>
   :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
   body {
     margin: 0; min-height: 100vh;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -15,8 +16,10 @@
   }
   @media (prefers-color-scheme: dark) {
     body { background: #121820; color: #e8eef5; }
-    .tarjeta { background: #1b232e !important; border-color: #2b3644 !important; }
-    .marcador { background: #1e2733 !important; border-color: #364355 !important; color: #aab6c4 !important; }
+    .tarjeta, .propuesta { background: #1b232e !important; border-color: #2b3644 !important; }
+    .pestanas { background: #1b232e !important; border-color: #2b3644 !important; }
+    input, textarea { background: #121820 !important; border-color: #364355 !important; color: #e8eef5 !important; }
+    .vacio { color: #8a97a6 !important; }
   }
   .contenedor { width: 100%; max-width: 560px; }
   .tarjeta {
@@ -26,13 +29,55 @@
   }
   h1 { font-size: 24px; margin: 0 0 10px; line-height: 1.25; }
   .explicacion { margin: 0; line-height: 1.55; opacity: .85; }
-  .marcador {
-    border: 2px dashed #c7cfd8; border-radius: 14px;
-    padding: 34px 20px; text-align: center;
-    color: #6b7684; background: #eef2f6;
+
+  .pestanas {
+    display: flex; gap: 4px; background: #fff; border: 1px solid #dde3ea;
+    border-radius: 12px; padding: 4px; margin-bottom: 18px;
   }
-  .marcador p { margin: 0; line-height: 1.5; }
-  .marcador .chica { font-size: 13px; margin-top: 6px; opacity: .8; }
+  .pestana {
+    flex: 1; padding: 10px; text-align: center; border: 0; border-radius: 9px;
+    background: transparent; font-size: 15px; cursor: pointer; color: inherit;
+  }
+  .pestana.activa { background: #2b6ef2; color: #fff; }
+
+  .vista { display: none; }
+  .vista.activa { display: block; }
+
+  .propuesta {
+    background: #fff; border: 1px solid #dde3ea; border-radius: 14px;
+    padding: 18px 20px; margin-bottom: 12px;
+  }
+  .propuesta .lugar { font-size: 17px; font-weight: 600; margin: 0 0 4px; }
+  .propuesta .quien { font-size: 13px; opacity: .7; margin: 0 0 8px; }
+  .propuesta .justificacion { margin: 0 0 14px; line-height: 1.5; }
+  .fila-voto { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .votos { font-size: 14px; opacity: .8; }
+  button.votar {
+    border: 1px solid #2b6ef2; background: #eaf1ff; color: #2b6ef2;
+    border-radius: 9px; padding: 8px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.votar:disabled { opacity: .55; cursor: default; }
+  @media (prefers-color-scheme: dark) {
+    button.votar { background: #17233a; }
+  }
+
+  .vacio { text-align: center; opacity: .7; padding: 20px 0; }
+
+  form { display: flex; flex-direction: column; gap: 14px; }
+  label { font-size: 14px; font-weight: 600; display: block; margin-bottom: 6px; }
+  input, textarea {
+    width: 100%; border: 1px solid #ccd4dc; border-radius: 9px;
+    padding: 10px 12px; font-size: 15px; font-family: inherit;
+  }
+  textarea { resize: vertical; min-height: 70px; }
+  button.enviar {
+    border: 0; background: #2b6ef2; color: #fff; border-radius: 9px;
+    padding: 12px; font-size: 15px; cursor: pointer;
+  }
+  button.enviar:disabled { opacity: .6; cursor: default; }
+  .aviso { font-size: 13px; margin: 0; }
+  .aviso.error { color: #c0392b; }
+  .aviso.ok { color: #1e8e3e; }
 </style>
 </head>
 <body>
@@ -46,10 +91,169 @@
       </p>
     </div>
 
-    <div class="marcador">
-      <p>Aquí va a ir el formulario para enviar tu idea.</p>
-      <p class="chica">Todavía no está listo — eso es lo que sigue.</p>
+    <div class="pestanas">
+      <button type="button" class="pestana activa" data-vista="lista">Propuestas</button>
+      <button type="button" class="pestana" data-vista="nueva">Proponer un lugar</button>
+    </div>
+
+    <div id="vista-lista" class="vista activa">
+      <div id="lista-propuestas"><p class="vacio">Cargando propuestas…</p></div>
+    </div>
+
+    <div id="vista-nueva" class="vista">
+      <div class="tarjeta">
+        <form id="form-propuesta">
+          <div>
+            <label for="lugar">Lugar</label>
+            <input id="lugar" name="lugar" type="text" maxlength="120" required>
+          </div>
+          <div>
+            <label for="propuesto_por">Tu nombre</label>
+            <input id="propuesto_por" name="propuesto_por" type="text" maxlength="80" required>
+          </div>
+          <div>
+            <label for="justificacion">Breve justificación</label>
+            <textarea id="justificacion" name="justificacion" maxlength="400"></textarea>
+          </div>
+          <button type="submit" class="enviar">Enviar propuesta</button>
+          <p id="aviso-form" class="aviso"></p>
+        </form>
+      </div>
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = "https://rzzuxmtglmshsfjgrjko.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_3F11sg3sXv56XRlDwDggNg_JQZ7Ab6l";
+    const cliente = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    function idVotante() {
+      let id = localStorage.getItem("votante_id");
+      if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem("votante_id", id);
+      }
+      return id;
+    }
+
+    function misVotos() {
+      try {
+        return JSON.parse(localStorage.getItem("mis_votos") || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function marcarVotado(propuestaId) {
+      const votos = misVotos();
+      votos.push(propuestaId);
+      localStorage.setItem("mis_votos", JSON.stringify(votos));
+    }
+
+    function escapar(texto) {
+      const div = document.createElement("div");
+      div.textContent = texto;
+      return div.innerHTML;
+    }
+
+    // Pestañas
+    document.querySelectorAll(".pestana").forEach((boton) => {
+      boton.addEventListener("click", () => {
+        document.querySelectorAll(".pestana").forEach((b) => b.classList.remove("activa"));
+        document.querySelectorAll(".vista").forEach((v) => v.classList.remove("activa"));
+        boton.classList.add("activa");
+        document.getElementById("vista-" + boton.dataset.vista).classList.add("activa");
+      });
+    });
+
+    async function cargarPropuestas() {
+      const contenedor = document.getElementById("lista-propuestas");
+      const { data, error } = await cliente
+        .from("propuestas_cena")
+        .select("id, lugar, propuesto_por, justificacion, creado_en, propuestas_cena_votos(count)")
+        .order("creado_en", { ascending: false });
+
+      if (error) {
+        contenedor.innerHTML = '<p class="vacio">No se pudieron cargar las propuestas.</p>';
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        contenedor.innerHTML = '<p class="vacio">Todavía no hay ninguna propuesta. ¡Sé el primero!</p>';
+        return;
+      }
+
+      const votados = misVotos();
+
+      contenedor.innerHTML = data.map((p) => {
+        const votos = p.propuestas_cena_votos?.[0]?.count ?? 0;
+        const yaVoto = votados.includes(p.id);
+        return `
+          <div class="propuesta">
+            <p class="lugar">${escapar(p.lugar)}</p>
+            <p class="quien">Propuesto por ${escapar(p.propuesto_por)}</p>
+            ${p.justificacion ? `<p class="justificacion">${escapar(p.justificacion)}</p>` : ""}
+            <div class="fila-voto">
+              <span class="votos">${votos} ${votos === 1 ? "voto" : "votos"}</span>
+              <button type="button" class="votar" data-id="${p.id}" ${yaVoto ? "disabled" : ""}>
+                ${yaVoto ? "Ya votaste" : "Votar"}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      contenedor.querySelectorAll("button.votar").forEach((boton) => {
+        boton.addEventListener("click", async () => {
+          const propuestaId = Number(boton.dataset.id);
+          boton.disabled = true;
+          const { error } = await cliente
+            .from("propuestas_cena_votos")
+            .insert({ propuesta_id: propuestaId, votante_id: idVotante() });
+          if (!error) {
+            marcarVotado(propuestaId);
+          }
+          cargarPropuestas();
+        });
+      });
+    }
+
+    document.getElementById("form-propuesta").addEventListener("submit", async (evento) => {
+      evento.preventDefault();
+      const boton = evento.target.querySelector("button.enviar");
+      const aviso = document.getElementById("aviso-form");
+      const lugar = document.getElementById("lugar").value.trim();
+      const propuesto_por = document.getElementById("propuesto_por").value.trim();
+      const justificacion = document.getElementById("justificacion").value.trim();
+
+      if (!lugar || !propuesto_por) return;
+
+      boton.disabled = true;
+      aviso.textContent = "";
+      aviso.className = "aviso";
+
+      const { error } = await cliente
+        .from("propuestas_cena")
+        .insert({ lugar, propuesto_por, justificacion });
+
+      boton.disabled = false;
+
+      if (error) {
+        aviso.textContent = "No se pudo enviar la propuesta. Intenta de nuevo.";
+        aviso.classList.add("error");
+        return;
+      }
+
+      aviso.textContent = "¡Propuesta enviada!";
+      aviso.classList.add("ok");
+      evento.target.reset();
+      cargarPropuestas();
+
+      document.querySelector('.pestana[data-vista="lista"]').click();
+    });
+
+    cargarPropuestas();
+  </script>
 </body>
 </html>
