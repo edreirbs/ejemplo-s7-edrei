@@ -15,15 +15,30 @@ Los datos de esta página viven en el proyecto de Supabase **`lexi`**, en dos
 tablas. Ninguna cifra ni ningún texto que se muestre se escribe a mano en el
 HTML: todo sale de esas tablas o de lo que la persona escriba en el formulario.
 
-| Tabla | Columnas | Qué guarda |
+**`propuestas_cena`** — una fila por propuesta enviada:
+
+| Columna | Tipo | Nota |
 |---|---|---|
-| `propuestas_cena` | `id`, `lugar`, `propuesto_por`, `justificacion`, `creado_en` | Una fila por propuesta enviada |
-| `propuestas_cena_votos` | `propuesta_id`, `votante_id`, `creado_en` | Un voto por persona y propuesta |
+| `id` | número | Lo pone la base sola, uno tras otro |
+| `lugar` | texto | Obligatorio, no puede ir vacío |
+| `propuesto_por` | texto | Obligatorio, no puede ir vacío |
+| `justificacion` | texto | La única opcional; si no la escriben, queda vacía |
+| `creado_en` | fecha y hora | La pone la base sola |
+
+**`propuestas_cena_votos`** — un voto por persona y propuesta:
+
+| Columna | Tipo | Nota |
+|---|---|---|
+| `propuesta_id` | número | Apunta a `propuestas_cena.id` |
+| `votante_id` | texto | Quién votó |
+| `creado_en` | fecha y hora | La pone la base sola |
 
 El número de votos que ve la gente no es una columna: se cuenta sobre las filas
 de `propuestas_cena_votos`. El `votante_id` es un identificador aleatorio que se
 guarda en el navegador de cada quien; sirve para no votar dos veces la misma
-propuesta, no es una cuenta de usuario.
+propuesta, no es una cuenta de usuario. La pareja `propuesta_id` + `votante_id`
+es la llave de esa tabla, así que el doble voto lo impide la base de datos, no
+solo el navegador.
 
 La tabla `registros` existe en ese mismo proyecto de Supabase pero **no la usa
 esta página**.
